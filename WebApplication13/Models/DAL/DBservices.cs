@@ -33,64 +33,6 @@ namespace WebApplication13.Models.DAL
             return con;
         }
 
-        public int insertInfo(UserInfo ui)
-        {
-
-            SqlConnection con;
-            SqlCommand cmd;
-
-            try
-            {
-                con = connect("DBConnectionString"); // create the connection
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
-
-            String cStr = BuildInsertCommandInfo(ui);      // helper method to build the insert string
-
-            cmd = CreateCommand(cStr, con);             // create the command
-
-            try
-            {
-                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
-                return rawEffected;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-                // write to log
-                throw (ex);
-            }
-
-            finally
-            {
-                if (con != null)
-                {
-                    // close the db connection
-                    con.Close();
-                }
-            }
-
-        }//insert UserInforamtion
-
-        //--------------------------------------------------------------------
-        // Build the Insert UserInfo command String
-        //--------------------------------------------------------------------
-        private String BuildInsertCommandInfo(UserInfo ui)
-        {
-            String command;
- 
-            StringBuilder sb = new StringBuilder();
-            // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}')", ui.Age, ui.Gender, ui.Education, ui.Job);
-            String prefix = "INSERT INTO TBUserInfo " + "(Age, Gender, Education, Job,) ";
-            command = prefix + sb.ToString();
-
-            return command;
-        }
 
         //---------------------------------------------------------------------------------
         // Create the SqlCommand
