@@ -43,7 +43,7 @@ namespace WebApplication13.Models
             Job = job;
         }
 
-        public int insert()
+        public int insertUser()
         {
             DBservices dbs = new DBservices();
             int rowEffected = dbs.insertUser(this);

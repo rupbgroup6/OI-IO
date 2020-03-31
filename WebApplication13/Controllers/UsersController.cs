@@ -22,8 +22,10 @@ namespace WebApplication13.Controllers
 
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public int Post([FromBody]User u)
         {
+            return u.insertUser();
+
         }
 
         // PUT api/<controller>/5

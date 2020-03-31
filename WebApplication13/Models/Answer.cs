@@ -29,10 +29,10 @@ namespace WebApplication13.Models
             QuestionId = questionId;
         }
 
-        public int insert()
+        public int InsertAnswer()
         {
             DBservices dbs = new DBservices();
-            int rowEffected = dbs.insertAnswer(this);
+            int rowEffected = dbs.InsertAnswer(this);
             return rowEffected;
         }
 

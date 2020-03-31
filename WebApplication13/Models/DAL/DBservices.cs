@@ -169,7 +169,7 @@ namespace WebApplication13.Models.DAL
             return command;
         }
 
-        public int insertAnswer(Answer a)
+        public int InsertAnswer(Answer a)
         {
 
             SqlConnection con;
@@ -221,8 +221,8 @@ namespace WebApplication13.Models.DAL
 
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}')", a.UserId, a.AnswerNum, a.QuestionId);
-            String prefix = "INSERT INTO TBUsers " + "(UserId, Answer, QuestionId) ";
+            sb.AppendFormat("Values('{0}', '{1}', '{2}')", a.UserId, a.QuestionId, a.AnswerNum);
+            String prefix = "INSERT INTO TBAnswers " + "(UserId, QuestionId, Answer ) ";
             command = prefix + sb;
 
             return command;
@@ -359,5 +359,169 @@ namespace WebApplication13.Models.DAL
             }
         }//get Questions
 
+
+        //--------------------------------------------------------------------------------------------------
+        // This method insert Question for the admin 
+        //--------------------------------------------------------------------------------------------------
+        public int AddQuestion(Question q)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildQuestionCommand(q);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }//insert Question
+
+
+        //--------------------------------------------------------------------
+        // Build the Insert Question!! command String
+        //--------------------------------------------------------------------
+        private string BuildQuestionCommand(Question q)
+        {
+
+            String command;
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}')", q.QuestionId, q.QuestionSTR, q.KindOfQuestion, q.OrderView);
+            String prefix = "INSERT INTO TBQuestions " + "(QuestionId, Question, KindOfQuestion, OrderView) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //--------------------------------------------------------------------------------------------------
+        // This method updates Questions for the admin 
+        //--------------------------------------------------------------------------------------------------
+        public int ChangeQuestion(Question q)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateQuestionCommand(q);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //--------------------------------------------------------------------
+        // Build the update Question!! command String
+        //--------------------------------------------------------------------
+        private string BuildUpdateQuestionCommand(Question q)
+        {
+
+            String command;
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBQuestions SET Question='{q.QuestionSTR.ToString()}', KindOfQuestion='{q.KindOfQuestion.ToString()}',OrderView='{q.OrderView}'  Where QuestionId={q.QuestionId}";
+            command = prefix;
+
+            return command;
+        }
+
+
+        //--------------------------------------------------------------------------------------------------
+        // This method delets Question for the admin 
+        //--------------------------------------------------------------------------------------------------
+        public int deleteQuestion(int id)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "DELETE from TBQuestions WHERE QuestionId=" + id.ToString();      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
     }
 }

@@ -20,8 +20,9 @@ namespace WebApplication13.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public int Post([FromBody]Answer a)
         {
+            return a.InsertAnswer();
         }
 
         // PUT api/<controller>/5
