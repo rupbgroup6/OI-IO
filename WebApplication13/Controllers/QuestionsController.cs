@@ -26,18 +26,22 @@ namespace WebApplication13.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public int Post([FromBody]Question q)
         {
+            return q.AddQuestion();
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public int Put(int id, [FromBody]Question q)
         {
+            return q.ChangeQuestion();
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public int Delete(int id)
         {
+            Question q = new Question();
+            return q.deleteQuestion(id);
         }
     }
 }

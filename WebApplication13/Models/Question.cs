@@ -40,5 +40,25 @@ namespace WebApplication13.Models
             return temp;
         }
 
+        public int AddQuestion()
+        {
+            DBservices dbs = new DBservices();
+            int rowEffected = dbs.AddQuestion(this);
+            return rowEffected;
+        }
+
+        public int ChangeQuestion()
+        {
+            DBservices dbs = new DBservices();
+            int rawEffected = dbs.ChangeQuestion(this);
+            return rawEffected;
+        }
+
+        public int deleteQuestion(int id)
+        {
+            DBservices dbs = new DBservices();
+            int rowEffected = dbs.deleteQuestion(id);
+            return rowEffected;
+        }
     }
 }
