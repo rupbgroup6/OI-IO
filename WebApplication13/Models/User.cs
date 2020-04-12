@@ -9,29 +9,31 @@ namespace WebApplication13.Models
     public class User
     {
         int userId;
-        int password;
+        string password;
         string email;
         Boolean admin;
         int age;
         string gender;
         string education;
         string job;
+        DateTime dateStamp;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }
         public string Education { get => education; set => education = value; }
         public string Job { get => job; set => job = value; }
         public int UserId { get => userId; set => userId = value; }
-        public int Password { get => password; set => password = value; }
+        public string Password { get => password; set => password = value; }
         public string Email { get => email; set => email = value; }
         public bool Admin { get => admin; set => admin = value; }
+        public DateTime DateStamp { get => dateStamp; set => dateStamp = value; }
 
         public User()
         {
 
         }
 
-        public User(int userId, int password, string email, bool admin, int age, string gender, string education, string job)
+        public User(int userId, string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp)
         {
             UserId = userId;
             Password = password;
@@ -41,6 +43,7 @@ namespace WebApplication13.Models
             Gender = gender;
             Education = education;
             Job = job;
+            DateStamp = dateStamp;
         }
 
         public int insertUser()
@@ -50,11 +53,11 @@ namespace WebApplication13.Models
             return rowEffected;
         }
 
-        public List<User> GetUserInfo(int id)
+        public List<User> GetUserInfo()
         {
             List<User> temp = new List<User>();
             DBservices dbs = new DBservices();
-            temp = dbs.GetUserInfo(id);
+            temp = dbs.GetUserInfo();
             return temp;
         }
     }

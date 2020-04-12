@@ -11,11 +11,11 @@ namespace WebApplication13.Controllers
     public class UsersController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<User> Get(int id)
+        public IEnumerable<User> Get()
         {
             List<User> ui = new List<User>();
             User u = new User();
-            ui = u.GetUserInfo(id);
+            ui = u.GetUserInfo();
             return ui;
         }
 
@@ -25,7 +25,6 @@ namespace WebApplication13.Controllers
         public int Post([FromBody]User u)
         {
             return u.insertUser();
-
         }
 
         // PUT api/<controller>/5

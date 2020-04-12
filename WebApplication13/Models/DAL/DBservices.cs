@@ -79,9 +79,8 @@ namespace WebApplication13.Models.DAL
             }
             catch (Exception ex)
             {
-                return 0;
-                // write to log
                 throw (ex);
+                // write to log
             }
 
             finally
@@ -101,11 +100,10 @@ namespace WebApplication13.Models.DAL
         private String BuildInsertCommandUsers(User u)
         {
             String command;
-
+            var date = u.DateStamp.Day + "-" + u.DateStamp.Month + "-" + u.DateStamp.Year;
             StringBuilder sb = new StringBuilder();
-            // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", u.UserId, u.Password, u.Email, u.Admin, u.Age, u.Gender, u.Job, u.Education);
-            String prefix = "INSERT INTO TBUsers " + "(UserId, Password, Email, Admin, Age, Gender, Job, Education) ";
+            sb.AppendFormat("Values('{0}' ,'{1}', '{2}', '{3}')", u.Email, u.Password, u.Admin, date);
+            String prefix = "INSERT INTO TBUsers " + "(Email, Password, Admin, DateStamp) ";
             command = prefix + sb.ToString();
 
             return command;
@@ -174,26 +172,40 @@ namespace WebApplication13.Models.DAL
         //--------------------------------------------------------------------------------------------------
         // This method gets the UserInfo 
         //--------------------------------------------------------------------------------------------------
-        public List<User> GetUserInfo(int id)
+        public List<User> GetUserInfo()
         {
             List<User> ui = new List<User>();
             SqlConnection con = null;
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select * from TBUsers where UserId=" + id;
+                String selectSTR = "select * from TBUsers";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 while (dr.Read())
                 {
                     User u = new User();
-
-                    u.Age = Convert.ToInt32(dr["Age"]);
-                    u.Gender = Convert.ToString(dr["Gender"]);
-                    u.Education = Convert.ToString(dr["Education"]);
-                    u.Job = Convert.ToString(dr["Job"]);
-                    string Date = Convert.ToString(dr["Date"]);
+                    u.Email = Convert.ToString(dr["Email"]);
+                    u.Password = Convert.ToString(dr["Password"]);
+                    if (dr["Age"].ToString().Length > 0)
+                    {
+                        u.Age = Convert.ToInt32(dr["Age"]);
+                    }
+                    if (dr["Gender"].ToString().Length > 0)
+                    {
+                        u.Gender = Convert.ToString(dr["Gender"]);
+                    }
+                    if (dr["Education"].ToString().Length > 0)
+                    {
+                        u.Education = Convert.ToString(dr["Education"]);
+                    }
+                    if (dr["Job"].ToString().Length > 0)
+                    {
+                        u.Job = Convert.ToString(dr["Job"]);
+                    }
+                    string date = Convert.ToString(dr["DateStamp"]);
+                    u.DateStamp = Convert.ToDateTime(date);
                     u.UserId = Convert.ToInt32(dr["UserId"]);
 
                     ui.Add(u);
