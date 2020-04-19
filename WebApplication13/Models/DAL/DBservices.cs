@@ -100,10 +100,9 @@ namespace WebApplication13.Models.DAL
         private String BuildInsertCommandUsers(User u)
         {
             String command;
-            var date = u.DateStamp.Day + "-" + u.DateStamp.Month + "-" + u.DateStamp.Year;
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Values('{0}' ,'{1}', '{2}', '{3}')", u.Email, u.Password, u.Admin, date);
-            String prefix = "INSERT INTO TBUsers " + "(Email, Password, Admin, DateStamp) ";
+            sb.AppendFormat("Values('{0}' ,'{1}', '{2}')", u.Email, u.Password, u.Admin);
+            String prefix = "INSERT INTO TBUsers " + "(Email, Password, Admin) ";
             command = prefix + sb.ToString();
 
             return command;
