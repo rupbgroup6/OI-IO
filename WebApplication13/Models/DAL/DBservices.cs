@@ -203,8 +203,11 @@ namespace WebApplication13.Models.DAL
                     {
                         u.Job = Convert.ToString(dr["Job"]);
                     }
-                    string date = Convert.ToString(dr["DateStamp"]);
-                    u.DateStamp = Convert.ToDateTime(date);
+                    if (dr["DateStamp"].ToString().Length > 0)
+                    {
+                        string date = Convert.ToString(dr["DateStamp"]);
+                        u.DateStamp = Convert.ToDateTime(date);
+                    }
                     u.UserId = Convert.ToInt32(dr["UserId"]);
 
                     ui.Add(u);
