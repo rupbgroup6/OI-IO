@@ -17,6 +17,8 @@ namespace WebApplication13.Models
         string education;
         string job;
         DateTime dateStamp;
+        string profile;
+        int score;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }
@@ -27,13 +29,15 @@ namespace WebApplication13.Models
         public string Email { get => email; set => email = value; }
         public bool Admin { get => admin; set => admin = value; }
         public DateTime DateStamp { get => dateStamp; set => dateStamp = value; }
+        public string Profile { get => profile; set => profile = value; }
+        public int Score { get => score; set => score = value; }
 
         public User()
         {
 
         }
 
-        public User(int userId, string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp)
+        public User(int userId, string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,int score, string profile)
         {
             UserId = userId;
             Password = password;
@@ -44,6 +48,8 @@ namespace WebApplication13.Models
             Education = education;
             Job = job;
             DateStamp = dateStamp;
+            Profile = profile;
+            Score = score;
         }
 
         public int insertUser()

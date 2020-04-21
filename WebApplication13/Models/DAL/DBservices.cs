@@ -208,6 +208,14 @@ namespace WebApplication13.Models.DAL
                         string date = Convert.ToString(dr["DateStamp"]);
                         u.DateStamp = Convert.ToDateTime(date);
                     }
+                    if (dr["Score"].ToString().Length > 0)
+                    {
+                        u.Score = Convert.ToInt32(dr["Score"]);
+                    }
+                    if (dr["Profile"].ToString().Length > 0)
+                    {
+                        u.Profile = Convert.ToString(dr["Profile"]);
+                    }
                     u.UserId = Convert.ToInt32(dr["UserId"]);
 
                     ui.Add(u);
