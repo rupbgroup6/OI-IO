@@ -20,9 +20,11 @@ namespace WebApplication13.Controllers
         }
 
         // POST api/<controller>
-        public int Post([FromBody]Answer a)
+        public int Post([FromBody]List<Answer> a)
         {
-            return a.InsertAnswer();
+            Answer.list = a;
+            Answer ans = new Answer();
+            return ans.InsertAnswers();
         }
 
         // PUT api/<controller>/5

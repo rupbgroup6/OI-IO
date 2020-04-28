@@ -12,6 +12,8 @@ namespace WebApplication13.Models
         int userId;
         int questionId;
 
+        static public List<Answer> list = new List<Answer>();
+
         public int AnswerNum { get => answerNum; set => answerNum = value; }
         public int QuestionId { get => questionId; set => questionId = value; }
         public int UserId { get => userId; set => userId = value; }
@@ -29,10 +31,10 @@ namespace WebApplication13.Models
             QuestionId = questionId;
         }
 
-        public int InsertAnswer()
+        public int InsertAnswers()
         {
             DBservices dbs = new DBservices();
-            int rowEffected = dbs.InsertAnswer(this);
+            int rowEffected = dbs.InsertAnswer(list);
             return rowEffected;
         }
 

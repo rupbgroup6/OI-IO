@@ -94,23 +94,8 @@ namespace WebApplication13.Models.DAL
 
         }//insert Users
 
-        //--------------------------------------------------------------------
-        // Build the Insert Users command String
-        //--------------------------------------------------------------------
-        private String BuildInsertCommandUsers(User u)
+        public int UpdateProfileUser(User u)
         {
-            String command;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Values('{0}' ,'{1}', '{2}')", u.Email, u.Password, u.Admin);
-            String prefix = "INSERT INTO TBUsers " + "(Email, Password, Admin) ";
-            command = prefix + sb.ToString();
-
-            return command;
-        }
-
-        public int InsertAnswer(Answer a)
-        {
-
             SqlConnection con;
             SqlCommand cmd;
 
@@ -124,7 +109,7 @@ namespace WebApplication13.Models.DAL
                 throw (ex);
             }
 
-            String cStr = BuildInsertCommandAnswers(a);      // helper method to build the insert string
+            String cStr = BuildUpdateProfileUserCommand(u);      // helper method to build the insert string
 
             cmd = CreateCommand(cStr, con);             // create the command
 
@@ -148,8 +133,140 @@ namespace WebApplication13.Models.DAL
                     con.Close();
                 }
             }
+        }
 
-        }//insert Users
+
+        //--------------------------------------------------------------------
+        // updating the Users info
+        //--------------------------------------------------------------------
+        public int UpdateUser(User u)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateUserCommand(u);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //--------------------------------------------------------------------
+        // Build the update Users command String
+        //--------------------------------------------------------------------
+        private String BuildUpdateUserCommand(User u)
+        {
+            String command;
+            var dStamp = u.DateStamp.Year + "-" + u.DateStamp.Month + "-" + u.DateStamp.Day;
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBUsers SET Gender='{u.Gender.ToString()}', Age='{u.Age.ToString()}',Job='{u.Job.ToString()}',Education='{u.Education.ToString()}', DateStamp='{dStamp}'  Where UserId={u.UserId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //--------------------------------------------------------------------
+        // Build the update Users command String
+        //--------------------------------------------------------------------
+        private String BuildUpdateProfileUserCommand(User u)
+        {
+            String command;
+            
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBUsers SET ScoreA='{u.ScoreA}', ScoreB='{u.ScoreB}', Profile='{u.Profile.ToString()}' Where UserId={u.UserId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //--------------------------------------------------------------------
+        // Build the Insert Users command String
+        //--------------------------------------------------------------------
+        private String BuildInsertCommandUsers(User u)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}' ,'{1}', '{2}')", u.Email, u.Password, u.Admin);
+            String prefix = "INSERT INTO TBUsers " + "(Email, Password, Admin) ";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        public int InsertAnswer(List<Answer> a)
+        {
+            int counter = 0;
+            foreach (var answer in a)
+            {
+                SqlConnection con;
+                SqlCommand cmd;
+
+                try
+                {
+                    con = connect("DBConnectionString"); // create the connection
+                }
+                catch (Exception ex)
+                {
+                    // write to log
+                    throw (ex);
+                }
+
+                String cStr = BuildInsertCommandAnswers(answer);      // helper method to build the insert string
+
+                cmd = CreateCommand(cStr, con);             // create the command
+
+                try
+                {
+                    counter += cmd.ExecuteNonQuery(); // execute the command
+                    
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                    // write to log
+                    throw (ex);
+                }
+
+                finally
+                {
+                    if (con != null)
+                    {
+                        // close the db connection
+                        con.Close();
+                    }
+                }
+            }
+            return counter;
+        }//insert Answers
 
         //--------------------------------------------------------------------
         // Build the Insert Answers command String
@@ -208,9 +325,13 @@ namespace WebApplication13.Models.DAL
                         string date = Convert.ToString(dr["DateStamp"]);
                         u.DateStamp = Convert.ToDateTime(date);
                     }
-                    if (dr["Score"].ToString().Length > 0)
+                    if (dr["ScoreA"].ToString().Length > 0)
                     {
-                        u.Score = Convert.ToInt32(dr["Score"]);
+                        u.ScoreA = float.Parse(dr["ScoreA"].ToString());
+                    }
+                    if (dr["ScoreB"].ToString().Length > 0)
+                    {
+                        u.ScoreB = float.Parse(dr["ScoreB"].ToString());
                     }
                     if (dr["Profile"].ToString().Length > 0)
                     {
@@ -378,8 +499,8 @@ namespace WebApplication13.Models.DAL
             String command;
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}')", q.QuestionId, q.QuestionSTR, q.KindOfQuestion, q.OrderView);
-            String prefix = "INSERT INTO TBQuestions " + "(QuestionId, Question, KindOfQuestion, OrderView) ";
+            sb.AppendFormat("Values('{0}', '{1}' ,'{2}')", q.QuestionSTR, q.KindOfQuestion, q.OrderView);
+            String prefix = "INSERT INTO TBQuestions " + "(Question, KindOfQuestion, OrderView) ";
             command = prefix + sb.ToString();
 
             return command;

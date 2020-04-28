@@ -18,7 +18,8 @@ namespace WebApplication13.Models
         string job;
         DateTime dateStamp;
         string profile;
-        int score;
+        float scoreA;
+        float scoreB;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }
@@ -30,16 +31,17 @@ namespace WebApplication13.Models
         public bool Admin { get => admin; set => admin = value; }
         public DateTime DateStamp { get => dateStamp; set => dateStamp = value; }
         public string Profile { get => profile; set => profile = value; }
-        public int Score { get => score; set => score = value; }
+        public float ScoreA { get => scoreA; set => scoreA = value; }
+        public float ScoreB { get => scoreB; set => scoreB = value; }
 
         public User()
         {
 
         }
 
-        public User(int userId, string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,int score, string profile)
+        public User( string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,float scoreA, float scoreB, string profile)
         {
-            UserId = userId;
+            
             Password = password;
             Email = email;
             Admin = false;
@@ -49,7 +51,8 @@ namespace WebApplication13.Models
             Job = job;
             DateStamp = dateStamp;
             Profile = profile;
-            Score = score;
+            ScoreA = scoreA;
+            ScoreB = scoreB;
         }
 
         public int insertUser()
@@ -65,6 +68,20 @@ namespace WebApplication13.Models
             DBservices dbs = new DBservices();
             temp = dbs.GetUserInfo();
             return temp;
+        }
+
+        public int UpdateUser()
+        {
+            DBservices dbs = new DBservices();
+            int rowEffected = dbs.UpdateUser(this);
+            return rowEffected;
+        }
+
+        public int UpdateProfileUser()
+        {
+            DBservices dbs = new DBservices();
+            int rowEffected = dbs.UpdateProfileUser(this);
+            return rowEffected;
         }
     }
 }
