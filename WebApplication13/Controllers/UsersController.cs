@@ -34,11 +34,19 @@ namespace WebApplication13.Controllers
         }
 
         [HttpPut]
-        [Route("api/users/updateprofile")]
-        public int post(int id, [FromBody]User u)
+        [Route("api/users/updateprofile/{u.UserId}")]
+        public int Put([FromBody]User u)
         {
             return u.UpdateProfileUser();
         }
+
+        [HttpPut]
+        [Route("api/users/updatesayings/{id}")]
+        public int Put([FromBody]User u, int id)
+        {
+            return u.UpdateSayingeUser();
+        }
+
 
         // DELETE api/<controller>/5
         public void Delete(int id)

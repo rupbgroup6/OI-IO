@@ -135,6 +135,59 @@ namespace WebApplication13.Models.DAL
             }
         }
 
+        public int UpdateSayingUser(User u)
+        {
+
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateSayingUserCommand(u);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        private string BuildUpdateSayingUserCommand(User u)
+        {
+            String command;
+
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBUsers SET AvgSay1='{u.AvgSay1}', AvgSay2='{u.AvgSay2}', AvgSay3='{u.AvgSay3}', AvgSay4='{u.AvgSay4}', AvgSay5='{u.AvgSay5}' Where UserId={u.UserId}";
+            command = prefix;
+
+            return command;
+        }
+
 
         //--------------------------------------------------------------------
         // updating the Users info
@@ -277,8 +330,8 @@ namespace WebApplication13.Models.DAL
 
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}')", a.UserId, a.QuestionId, a.AnswerNum);
-            String prefix = "INSERT INTO TBAnswers " + "(UserId, QuestionId, Answer ) ";
+            sb.AppendFormat("Values({0}, {1}, '{2}')", a.UserId, a.QuestionId, a.AnswerNum);
+            String prefix = "INSERT INTO TBAnswers " + "(UserId, QuestionId, Answer)";
             command = prefix + sb;
 
             return command;
@@ -333,6 +386,26 @@ namespace WebApplication13.Models.DAL
                     {
                         u.ScoreB = float.Parse(dr["ScoreB"].ToString());
                     }
+                    if (dr["AvgSay1"].ToString().Length > 0)
+                    {
+                        u.AvgSay1 = float.Parse(dr["AvgSay1"].ToString());
+                    }
+                    if (dr["AvgSay2"].ToString().Length > 0)
+                    {
+                        u.AvgSay2 = float.Parse(dr["AvgSay2"].ToString());
+                    }
+                    if (dr["AvgSay3"].ToString().Length > 0)
+                    {
+                        u.AvgSay3 = float.Parse(dr["AvgSay3"].ToString());
+                    }
+                    if (dr["AvgSay4"].ToString().Length > 0)
+                    {
+                        u.AvgSay4 = float.Parse(dr["AvgSay4"].ToString());
+                    }
+                    if (dr["AvgSay5"].ToString().Length > 0)
+                    {
+                        u.AvgSay5 = float.Parse(dr["AvgSay5"].ToString());
+                    }
                     if (dr["Profile"].ToString().Length > 0)
                     {
                         u.Profile = Convert.ToString(dr["Profile"]);
@@ -379,7 +452,7 @@ namespace WebApplication13.Models.DAL
 
                     a.UserId = Convert.ToInt32(dr["UserId"]);
                     a.QuestionId = Convert.ToInt32(dr["QuestionId"]);
-                    a.AnswerNum = Convert.ToInt32(dr["Answer"]);
+                    a.AnswerNum = Convert.ToString(dr["Answer"]);
 
                     al.Add(a);
                 }

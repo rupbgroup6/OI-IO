@@ -8,13 +8,13 @@ namespace WebApplication13.Models
 {
     public class Answer
     {
-        int answerNum;
+        string answerNum;
         int userId;
         int questionId;
 
         static public List<Answer> list = new List<Answer>();
 
-        public int AnswerNum { get => answerNum; set => answerNum = value; }
+        public string AnswerNum { get => answerNum; set => answerNum = value; }
         public int QuestionId { get => questionId; set => questionId = value; }
         public int UserId { get => userId; set => userId = value; }
 
@@ -24,7 +24,7 @@ namespace WebApplication13.Models
                 
         }
 
-        public Answer(int userId, int answer, int questionId)
+        public Answer(int userId, string answer, int questionId)
         {
             UserId = userId;
             AnswerNum = answer;

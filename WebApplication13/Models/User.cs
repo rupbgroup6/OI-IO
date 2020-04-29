@@ -20,6 +20,11 @@ namespace WebApplication13.Models
         string profile;
         float scoreA;
         float scoreB;
+        float avgSay1;
+        float avgSay2;
+        float avgSay3;
+        float avgSay4;
+        float avgSay5;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }
@@ -33,13 +38,18 @@ namespace WebApplication13.Models
         public string Profile { get => profile; set => profile = value; }
         public float ScoreA { get => scoreA; set => scoreA = value; }
         public float ScoreB { get => scoreB; set => scoreB = value; }
+        public float AvgSay1 { get => avgSay1; set => avgSay1 = value; }
+        public float AvgSay2 { get => avgSay2; set => avgSay2 = value; }
+        public float AvgSay3 { get => avgSay3; set => avgSay3 = value; }
+        public float AvgSay4 { get => avgSay4; set => avgSay4 = value; }
+        public float AvgSay5 { get => avgSay5; set => avgSay5 = value; }
 
         public User()
         {
 
         }
 
-        public User( string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,float scoreA, float scoreB, string profile)
+        public User( string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,float scoreA, float scoreB, string profile, float avgSay1, float avgSay2, float avgSay3, float avgSay4, float avgSay5)
         {
             
             Password = password;
@@ -53,6 +63,11 @@ namespace WebApplication13.Models
             Profile = profile;
             ScoreA = scoreA;
             ScoreB = scoreB;
+            AvgSay1 = avgSay1;
+            AvgSay2 = avgSay2;
+            AvgSay3 = avgSay3;
+            AvgSay4 = avgSay4;
+            AvgSay5 = avgSay5;
         }
 
         public int insertUser()
@@ -81,6 +96,13 @@ namespace WebApplication13.Models
         {
             DBservices dbs = new DBservices();
             int rowEffected = dbs.UpdateProfileUser(this);
+            return rowEffected;
+        }
+
+        public int UpdateSayingeUser()
+        {
+            DBservices dbs = new DBservices();
+            int rowEffected = dbs.UpdateSayingUser(this);
             return rowEffected;
         }
     }
