@@ -105,5 +105,13 @@ namespace WebApplication13.Models
             int rowEffected = dbs.UpdateSayingUser(this);
             return rowEffected;
         }
+
+        public List<User> GetUserByEmail(string email)
+        {
+            List<User> temp = new List<User>();
+            DBservices dbs = new DBservices();
+            temp = dbs.GetUserByEmail(email);
+            return temp;
+        }
     }
 }

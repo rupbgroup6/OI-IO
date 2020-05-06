@@ -19,6 +19,16 @@ namespace WebApplication13.Controllers
             return ui;
         }
 
+        [HttpGet]
+        [Route("api/users/login/{email}")]
+        public IEnumerable<User> Get(string email)
+        {
+            List<User> ui = new List<User>();
+            User u = new User();
+            ui = u.GetUserByEmail(email);
+            return ui;
+        }
+
 
 
         // POST api/<controller>

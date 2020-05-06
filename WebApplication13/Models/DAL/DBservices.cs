@@ -135,6 +135,96 @@ namespace WebApplication13.Models.DAL
             }
         }
 
+        public List<User> GetUserByEmail(string email)
+        {
+            List<User> ui = new List<User>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = $"select * from TBUsers where Email='{email}'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    User u = new User();
+                    u.Email = Convert.ToString(dr["Email"]);
+                    u.Password = Convert.ToString(dr["Password"]);
+                    if (dr["Age"].ToString().Length > 0)
+                    {
+                        u.Age = Convert.ToInt32(dr["Age"]);
+                    }
+                    if (dr["Gender"].ToString().Length > 0)
+                    {
+                        u.Gender = Convert.ToString(dr["Gender"]);
+                    }
+                    if (dr["Education"].ToString().Length > 0)
+                    {
+                        u.Education = Convert.ToString(dr["Education"]);
+                    }
+                    if (dr["Job"].ToString().Length > 0)
+                    {
+                        u.Job = Convert.ToString(dr["Job"]);
+                    }
+                    if (dr["DateStamp"].ToString().Length > 0)
+                    {
+                        string date = Convert.ToString(dr["DateStamp"]);
+                        u.DateStamp = Convert.ToDateTime(date);
+                    }
+                    if (dr["ScoreA"].ToString().Length > 0)
+                    {
+                        u.ScoreA = float.Parse(dr["ScoreA"].ToString());
+                    }
+                    if (dr["ScoreB"].ToString().Length > 0)
+                    {
+                        u.ScoreB = float.Parse(dr["ScoreB"].ToString());
+                    }
+                    if (dr["AvgSay1"].ToString().Length > 0)
+                    {
+                        u.AvgSay1 = float.Parse(dr["AvgSay1"].ToString());
+                    }
+                    if (dr["AvgSay2"].ToString().Length > 0)
+                    {
+                        u.AvgSay2 = float.Parse(dr["AvgSay2"].ToString());
+                    }
+                    if (dr["AvgSay3"].ToString().Length > 0)
+                    {
+                        u.AvgSay3 = float.Parse(dr["AvgSay3"].ToString());
+                    }
+                    if (dr["AvgSay4"].ToString().Length > 0)
+                    {
+                        u.AvgSay4 = float.Parse(dr["AvgSay4"].ToString());
+                    }
+                    if (dr["AvgSay5"].ToString().Length > 0)
+                    {
+                        u.AvgSay5 = float.Parse(dr["AvgSay5"].ToString());
+                    }
+                    if (dr["Profile"].ToString().Length > 0)
+                    {
+                        u.Profile = Convert.ToString(dr["Profile"]);
+                    }
+                    u.UserId = Convert.ToInt32(dr["UserId"]);
+
+                    ui.Add(u);
+                }
+
+                return ui;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
         public int UpdateSayingUser(User u)
         {
 
