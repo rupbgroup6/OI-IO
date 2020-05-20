@@ -8,23 +8,23 @@ namespace WebApplication13.Models
 {
     public class User
     {
-        int userId;
-        string password;
-        string email;
-        Boolean admin;
-        int age;
-        string gender;
-        string education;
-        string job;
-        DateTime dateStamp;
-        string profile;
-        float scoreA;
-        float scoreB;
-        float avgSay1;
-        float avgSay2;
-        float avgSay3;
-        float avgSay4;
-        float avgSay5;
+        private int userId;
+        private string password;
+        private string email;
+        private Boolean admin;
+        private int age;
+        private string gender;
+        private string education;
+        private string job;
+        private DateTime dateStamp;
+        private string profile;
+        private float scoreA;
+        private float scoreB;
+        private float avgSay1;
+        private float avgSay2;
+        private float avgSay3;
+        private float avgSay4;
+        private float avgSay5;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }

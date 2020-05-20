@@ -8,9 +8,9 @@ namespace WebApplication13.Models
 {
     public class Answer
     {
-        string answerNum;
-        int userId;
-        int questionId;
+        private string answerNum;
+        private int userId;
+        private int questionId;
 
         static public List<Answer> list = new List<Answer>();
 

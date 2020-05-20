@@ -582,14 +582,30 @@ namespace WebApplication13.Models.DAL
                 while (dr.Read())
                 {
                     Question q = new Question();
+                    if (Convert.ToString(dr["KindOfQuestion"]) == "OR")
+                    {
+                        OrQuestion oQ = new OrQuestion();
+                        oQ.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
+                        oQ.QuestionSTR = Convert.ToString(dr["Question"]);
+                        oQ.QuestionId = Convert.ToInt32(dr["QuestionId"]);
+                        oQ.OrderView = Convert.ToInt32(dr["OrderView"]);
+                        oQ.OrOrderView = Convert.ToInt32(dr["OrOrderView"]);
 
-                    q.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
-                    q.QuestionSTR = Convert.ToString(dr["Question"]);
-                    q.QuestionId = Convert.ToInt32(dr["QuestionId"]);
-                    q.OrderView = Convert.ToInt32(dr["OrderView"]);
+                        ql.Add(oQ);
 
-                    ql.Add(q);
+                    }
+                    else
+                    {
+                        q.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
+                        q.QuestionSTR = Convert.ToString(dr["Question"]);
+                        q.QuestionId = Convert.ToInt32(dr["QuestionId"]);
+                        q.OrderView = Convert.ToInt32(dr["OrderView"]);
+
+                        ql.Add(q);
+                    }
+                    
                 }
+
 
                 return ql;
             }

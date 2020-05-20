@@ -8,10 +8,10 @@ namespace WebApplication13.Models
 {
     public class Question
     {
-        int questionId;
-        string questionSTR;
-        string kindOfQuestion;
-        int orderView;
+        private int questionId;
+        private string questionSTR;
+        private string kindOfQuestion;
+        private int orderView;
 
         public int QuestionId { get => questionId; set => questionId = value; }
         public string QuestionSTR { get => questionSTR; set => questionSTR = value; }
