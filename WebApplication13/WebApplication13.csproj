@@ -169,7 +169,6 @@
     </Compile>
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
-    <Compile Include="Models\OrQuestion.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

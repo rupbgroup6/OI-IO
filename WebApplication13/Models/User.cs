@@ -11,7 +11,7 @@ namespace WebApplication13.Models
         private int userId;
         private string password;
         private string email;
-        private Boolean admin;
+        private bool admin;
         private int age;
         private string gender;
         private string education;
@@ -25,6 +25,7 @@ namespace WebApplication13.Models
         private float avgSay3;
         private float avgSay4;
         private float avgSay5;
+        private bool secondTime;
 
         public int Age { get => age; set => age = value; }
         public string Gender { get => gender; set => gender = value; }
@@ -43,13 +44,14 @@ namespace WebApplication13.Models
         public float AvgSay3 { get => avgSay3; set => avgSay3 = value; }
         public float AvgSay4 { get => avgSay4; set => avgSay4 = value; }
         public float AvgSay5 { get => avgSay5; set => avgSay5 = value; }
+        public bool SecondTime { get => secondTime; set => secondTime = value; }
 
         public User()
         {
 
         }
 
-        public User( string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,float scoreA, float scoreB, string profile, float avgSay1, float avgSay2, float avgSay3, float avgSay4, float avgSay5)
+        public User( string password, string email, bool admin, int age, string gender, string education, string job, DateTime dateStamp,float scoreA, float scoreB, string profile, float avgSay1, float avgSay2, float avgSay3, float avgSay4, float avgSay5, bool secondTime)
         {
             
             Password = password;
@@ -68,6 +70,7 @@ namespace WebApplication13.Models
             AvgSay3 = avgSay3;
             AvgSay4 = avgSay4;
             AvgSay5 = avgSay5;
+            SecondTime = secondTime;
         }
 
         public int insertUser()

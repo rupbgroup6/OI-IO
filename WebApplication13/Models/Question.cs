@@ -12,23 +12,26 @@ namespace WebApplication13.Models
         private string questionSTR;
         private string kindOfQuestion;
         private int orderView;
+        private int orOrderView;
 
         public int QuestionId { get => questionId; set => questionId = value; }
         public string QuestionSTR { get => questionSTR; set => questionSTR = value; }
         public string KindOfQuestion { get => kindOfQuestion; set => kindOfQuestion = value; }
         public int OrderView { get => orderView; set => orderView = value; }
+        public int OrOrderView { get => orOrderView; set => orOrderView = value; }
 
         public Question()
         {
 
         }
 
-        public Question(int questionId, string question, string kindOfQuestion, int orderView)
+        public Question(int questionId, string question, string kindOfQuestion, int orderView, int orOrderView)
         {
             QuestionId = questionId;
             QuestionSTR = question;
             KindOfQuestion = kindOfQuestion;
             OrderView = orderView;
+            OrOrderView = OrOrderView;
         }
 
 

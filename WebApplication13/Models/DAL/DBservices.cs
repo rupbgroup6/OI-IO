@@ -205,7 +205,8 @@ namespace WebApplication13.Models.DAL
                         u.Profile = Convert.ToString(dr["Profile"]);
                     }
                     u.UserId = Convert.ToInt32(dr["UserId"]);
-
+                    u.SecondTime = Convert.ToBoolean(dr["SecondTime"]);
+                    u.Admin = Convert.ToBoolean(dr["Admin"]);
                     ui.Add(u);
                 }
 
@@ -272,7 +273,7 @@ namespace WebApplication13.Models.DAL
             String command;
 
             // use a string builder to create the dynamic string
-            String prefix = $"UPDATE TBUsers SET AvgSay1='{u.AvgSay1}', AvgSay2='{u.AvgSay2}', AvgSay3='{u.AvgSay3}', AvgSay4='{u.AvgSay4}', AvgSay5='{u.AvgSay5}' Where UserId={u.UserId}";
+            String prefix = $"UPDATE TBUsers SET AvgSay1='{u.AvgSay1}', AvgSay2='{u.AvgSay2}', AvgSay3='{u.AvgSay3}', AvgSay4='{u.AvgSay4}', AvgSay5='{u.AvgSay5}', SecondTime='{u.SecondTime}' Where UserId={u.UserId}";
             command = prefix;
 
             return command;
@@ -343,7 +344,7 @@ namespace WebApplication13.Models.DAL
         private String BuildUpdateProfileUserCommand(User u)
         {
             String command;
-            
+
             // use a string builder to create the dynamic string
             String prefix = $"UPDATE TBUsers SET ScoreA='{u.ScoreA}', ScoreB='{u.ScoreB}', Profile='{u.Profile.ToString()}' Where UserId={u.UserId}";
             command = prefix;
@@ -390,7 +391,7 @@ namespace WebApplication13.Models.DAL
                 try
                 {
                     counter += cmd.ExecuteNonQuery(); // execute the command
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -500,6 +501,8 @@ namespace WebApplication13.Models.DAL
                     {
                         u.Profile = Convert.ToString(dr["Profile"]);
                     }
+                    u.Admin = Convert.ToBoolean(dr["Admin"]);
+                    u.SecondTime = Convert.ToBoolean(dr["SecondTime"]);
                     u.UserId = Convert.ToInt32(dr["UserId"]);
 
                     ui.Add(u);
@@ -582,28 +585,12 @@ namespace WebApplication13.Models.DAL
                 while (dr.Read())
                 {
                     Question q = new Question();
-                    if (Convert.ToString(dr["KindOfQuestion"]) == "OR")
-                    {
-                        OrQuestion oQ = new OrQuestion();
-                        oQ.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
-                        oQ.QuestionSTR = Convert.ToString(dr["Question"]);
-                        oQ.QuestionId = Convert.ToInt32(dr["QuestionId"]);
-                        oQ.OrderView = Convert.ToInt32(dr["OrderView"]);
-                        oQ.OrOrderView = Convert.ToInt32(dr["OrOrderView"]);
-
-                        ql.Add(oQ);
-
-                    }
-                    else
-                    {
-                        q.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
-                        q.QuestionSTR = Convert.ToString(dr["Question"]);
-                        q.QuestionId = Convert.ToInt32(dr["QuestionId"]);
-                        q.OrderView = Convert.ToInt32(dr["OrderView"]);
-
-                        ql.Add(q);
-                    }
-                    
+                    q.KindOfQuestion = Convert.ToString(dr["KindOfQuestion"]);
+                    q.QuestionSTR = Convert.ToString(dr["Question"]);
+                    q.QuestionId = Convert.ToInt32(dr["QuestionId"]);
+                    q.OrderView = Convert.ToInt32(dr["OrderView"]);
+                    q.OrOrderView = Convert.ToInt32(dr["OrOrderView"]);
+                    ql.Add(q);
                 }
 
 
