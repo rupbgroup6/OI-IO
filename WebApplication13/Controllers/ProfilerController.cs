@@ -19,11 +19,13 @@ namespace WebApplication13.Controllers
             pr = p.GetAllProfiles();
             return pr;
         }
-        public IEnumerable<Profiler> Get(DateTime s, DateTime e)
+        [HttpGet]
+        [Route("api/profiler/byDate/{sDate, eDate}")]
+        public IEnumerable<Profiler> Get(DateTime sDate, DateTime eDate)
         {
             List<Profiler> pr = new List<Profiler>();
             Profiler p = new Profiler();
-            pr = p.GetAllProfilesByDate(s, e);
+            pr = p.GetAllProfilesByDate(sDate, eDate);
             return pr;
         }
 

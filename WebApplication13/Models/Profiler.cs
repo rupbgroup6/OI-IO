@@ -8,25 +8,25 @@ namespace WebApplication13.Models
 {
     public class Profiler
     {
-        private DateTime dateStamp;
+        
         private string profile;
+        private int total;
 
 
-        public DateTime DateStamp { get => dateStamp; set => dateStamp = value; }
+       
         public string Profile { get => profile; set => profile = value; }
-
+        public int Total { get => total; set => total = value; }
 
         public Profiler()
         {
 
         }
 
-        public Profiler(DateTime dateStamp, string profile)
+        public Profiler(string profile, int total)
         {
-
-            DateStamp = dateStamp;
+            
             Profile = profile;
-
+            Total = total;
         }
 
         public List<Profiler> GetAllProfilesByDate(DateTime s, DateTime e)

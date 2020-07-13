@@ -40,7 +40,7 @@ namespace WebApplication13.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select Profile, count(Profile) as Total from TBUsers group by Profile";
+                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where Profile not like 'NULL' group by Profile ";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -48,10 +48,9 @@ namespace WebApplication13.Models.DAL
                 {
                     Profiler p = new Profiler();
 
-                    if (dr["DateStamp"].ToString().Length > 0)
+                    if (dr["Total"].ToString().Length > 0)
                     {
-                        string date = Convert.ToString(dr["DateStamp"]);
-                        p.DateStamp = Convert.ToDateTime(date);
+                        p.Total = Convert.ToInt32(dr["Total"]);
                     }
 
                     if (dr["Profile"].ToString().Length > 0)
@@ -483,20 +482,19 @@ namespace WebApplication13.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where DateStamp between '"+s+"' and '"+e+"' group by Profile";
+                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where DateStamp between '"+s+"' and '"+e+"' and not like 'NULL' group by Profile";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 while (dr.Read())
                 {
                     Profiler p = new Profiler();
-    
-                    if (dr["DateStamp"].ToString().Length > 0)
+
+                    if (dr["Total"].ToString().Length > 0)
                     {
-                        string date = Convert.ToString(dr["DateStamp"]);
-                        p.DateStamp = Convert.ToDateTime(date);
+                        p.Total = Convert.ToInt32(dr["Total"]);
                     }
-                
+
                     if (dr["Profile"].ToString().Length > 0)
                     {
                         p.Profile = Convert.ToString(dr["Profile"]);
