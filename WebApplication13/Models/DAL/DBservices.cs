@@ -33,6 +33,51 @@ namespace WebApplication13.Models.DAL
             return con;
         }
 
+        internal List<Profiler> GetAllProfiles()
+        {
+            List<Profiler> ap = new List<Profiler>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select Profile, count(Profile) as Total from TBUsers group by Profile";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Profiler p = new Profiler();
+
+                    if (dr["DateStamp"].ToString().Length > 0)
+                    {
+                        string date = Convert.ToString(dr["DateStamp"]);
+                        p.DateStamp = Convert.ToDateTime(date);
+                    }
+
+                    if (dr["Profile"].ToString().Length > 0)
+                    {
+                        p.Profile = Convert.ToString(dr["Profile"]);
+                    }
+
+                    ap.Add(p);
+                }
+
+                return ap;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
 
         //---------------------------------------------------------------------------------
         // Create the SqlCommand
@@ -428,6 +473,53 @@ namespace WebApplication13.Models.DAL
             return command;
         }
 
+        //--------------------------------------------------------------------------------------------------
+        // This method gets the count of all profiles by date
+        //--------------------------------------------------------------------------------------------------
+        public List<Profiler> GetAllProfilesByDate(DateTime s, DateTime e)
+        {
+            List<Profiler> ap = new List<Profiler>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where DateStamp between '"+s+"' and '"+e+"' group by Profile";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Profiler p = new Profiler();
+    
+                    if (dr["DateStamp"].ToString().Length > 0)
+                    {
+                        string date = Convert.ToString(dr["DateStamp"]);
+                        p.DateStamp = Convert.ToDateTime(date);
+                    }
+                
+                    if (dr["Profile"].ToString().Length > 0)
+                    {
+                        p.Profile = Convert.ToString(dr["Profile"]);
+                    }
+
+                    ap.Add(p);
+                }
+
+                return ap;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }//Get Profiles
 
         //--------------------------------------------------------------------------------------------------
         // This method gets the UserInfo 
