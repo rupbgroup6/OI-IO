@@ -33,7 +33,491 @@ namespace WebApplication13.Models.DAL
             return con;
         }
 
-        internal List<Profiler> GetAllProfiles()
+        //---------------------------------------------------------------------------------
+        // Delete friend req
+        //---------------------------------------------------------------------------------
+        public List<Friend> getFeeds(int userId)
+        {
+            List<Friend> fl = new List<Friend>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = $"select fl.UserId, fl.FriendId, u.Email, fl.Status, fl.FriendGuess from  TBFriendsList fl inner join TBUsers u on fl.UserId=u.UserId where fl.FriendId = 1 and Status = 'Verified'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Friend f = new Friend();
+                    f.UserId = Convert.ToInt32(dr["FriendId"]);
+                    f.FriendId = Convert.ToInt32(dr["UserId"]);
+                    f.FriendEmail = dr["Email"].ToString();
+                    f.Status = dr["Status"].ToString();
+                    fl.Add(f);
+                }
+
+                return fl;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // give feedback
+        //---------------------------------------------------------------------------------
+        public int giveFeedback(Friend f)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateGuessCommand(f);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        private string BuildUpdateGuessCommand(Friend f)
+        {
+            String command;
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBFriendsList set FriendGuess = '{f.FriendsGuess}' where UserID= {f.UserId} and FriendId = {f.FriendId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // Check for friend req
+        //---------------------------------------------------------------------------------
+        public List<Friend> CheckFriendReq(string userId)
+        {
+            List<Friend> fl = new List<Friend>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = $"select fl.FriendId as UserId, fl.UserId as FriendId, u.Email, fl.Status from TBFriendsList fl inner join TBFriendReq fr on fl.FriendId = fr.FriendId inner join TBUsers u on fl.UserId = u.UserId where fl.FriendId = {userId} and fl.Status = 'Pending'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Friend f = new Friend();
+                    f.UserId = Convert.ToInt32(dr["UserId"]);
+                    f.FriendId = Convert.ToInt32(dr["FriendId"]);
+                    f.FriendEmail = dr["Email"].ToString();
+                    f.Status = dr["Status"].ToString();
+                    fl.Add(f);
+                }
+
+                return fl;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // Accept friend req
+        //---------------------------------------------------------------------------------
+        public int AcceptFriendReq(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateFreindReqCommand(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+
+            
+        }
+
+        //---------------------------------------------------------------------------------
+        // update friend req builder command
+        //---------------------------------------------------------------------------------
+        private string BuildUpdateFreindReqCommand(int userId, int friendId)
+        {
+            String command;
+            // use a string builder to create the dynamic string
+            String prefix = $"UPDATE TBFriendsList set Status='Verified' where UserID= {friendId} and FriendId = {userId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // Accept friend
+        //---------------------------------------------------------------------------------
+        public int AcceptFriend(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildInsertAcceptFriendCommandUsers(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+                // write to log
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // insert accept friend builder command
+        //---------------------------------------------------------------------------------
+        private string BuildInsertAcceptFriendCommandUsers(int userId, int friendId)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}' ,'{1}', '{2}')", userId, friendId, "Verified");
+            String prefix = "INSERT INTO TBFriendsList " + "(UserId, FriendId, Status)";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // Add friend request
+        //---------------------------------------------------------------------------------
+        public int AddFriendReq(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildInsertFriendReqCommandUsers(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+                // write to log
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // insert a friend req builder command
+        //---------------------------------------------------------------------------------
+        private string BuildInsertFriendReqCommandUsers(int userId, int friendId)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}' ,'{1}')", userId, friendId);
+            String prefix = "INSERT INTO TBFriendReq " + "(UserId, FriendId)";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // Add a friend to fl
+        //---------------------------------------------------------------------------------
+        public int AddFriend(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildInsertFriendCommandUsers(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+                // write to log
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // insert a friend builder command
+        //---------------------------------------------------------------------------------
+        private string BuildInsertFriendCommandUsers(int userId, int friendId)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}' ,'{1}', '{2}')", userId, friendId, "Pending");
+            String prefix = "INSERT INTO TBFriendsList " + "(UserId, FriendId, Status)";
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // Delete friend req
+        //---------------------------------------------------------------------------------
+        public int DeleteFriendReq(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildDeleteFriendReqCommand(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // delete a friend req command
+        //---------------------------------------------------------------------------------
+        private string BuildDeleteFriendReqCommand(int userId, int friendId)
+        {
+            String command;
+
+            // use a string builder to create the dynamic string
+            String prefix = $"delete from TBFriendReq where UserId = {userId} and FriendId = {friendId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // delete a friend
+        //---------------------------------------------------------------------------------
+        public int DeleteFriend(int userId, int friendId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildDeleteFriendCommand(userId, friendId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int rawEffected = cmd.ExecuteNonQuery(); // execute the command
+                return rawEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+            
+        }
+
+        //---------------------------------------------------------------------------------
+        // delete friend command
+        //---------------------------------------------------------------------------------
+        private string BuildDeleteFriendCommand(int userId, int friendId)
+        {
+            String command;
+
+            // use a string builder to create the dynamic string
+            String prefix = $"delete from  TBFriendsList where UserId = {friendId} and FriendId = {userId}";
+            command = prefix;
+
+            return command;
+        }
+
+        //---------------------------------------------------------------------------------
+        // get all profiles
+        //---------------------------------------------------------------------------------
+        public List<Profiler> GetAllProfiles()
         {
             List<Profiler> ap = new List<Profiler>();
             SqlConnection con = null;
@@ -95,7 +579,9 @@ namespace WebApplication13.Models.DAL
             return cmd;
         }
 
-
+        //---------------------------------------------------------------------------------
+        // insert user
+        //---------------------------------------------------------------------------------
         public int insertUser(User u)
         {
 
@@ -138,6 +624,53 @@ namespace WebApplication13.Models.DAL
 
         }//insert Users
 
+        //---------------------------------------------------------------------------------
+        // get all friends
+        //---------------------------------------------------------------------------------
+        public List<Friend> GetFriends(int id)
+        {
+            List<Friend> fl = new List<Friend>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select fl.UserId, fl.FriendId, u.Email, fl.Status, fl.FriendGuess from  TBFriendsList fl inner join TBUsers u on fl.FriendId=u.UserId where fl.UserId = " + id;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Friend f = new Friend();
+                    f.UserId = Convert.ToInt32(dr["UserId"]);
+                    f.FriendId = Convert.ToInt32(dr["FriendId"]);
+                    f.FriendEmail = Convert.ToString(dr["Email"]);
+                    f.Status = Convert.ToString(dr["Status"]);
+                    if (dr["FriendGuess"].ToString().Length > 0)
+                    {
+                        f.FriendsGuess = dr["FriendGuess"].ToString();
+                    }
+                    fl.Add(f);
+                }
+
+                return fl;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // update user's profile
+        //---------------------------------------------------------------------------------
         public int UpdateProfileUser(User u)
         {
             SqlConnection con;
@@ -179,97 +712,10 @@ namespace WebApplication13.Models.DAL
             }
         }
 
-        //public List<User> GetUserByEmail(string email)
-        //{
-        //    List<User> ui = new List<User>();
-        //    SqlConnection con = null;
-        //    try
-        //    {
-        //        con = connect("DBConnectionString");
-        //        String selectSTR = $"select * from TBUsers where Email='{email}'";
-        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
-        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-        //        while (dr.Read())
-        //        {
-        //            User u = new User();
-        //            u.Email = Convert.ToString(dr["Email"]);
-        //            u.Password = Convert.ToString(dr["Password"]);
-        //            if (dr["Age"].ToString().Length > 0)
-        //            {
-        //                u.Age = Convert.ToInt32(dr["Age"]);
-        //            }
-        //            if (dr["Gender"].ToString().Length > 0)
-        //            {
-        //                u.Gender = Convert.ToString(dr["Gender"]);
-        //            }
-        //            if (dr["Education"].ToString().Length > 0)
-        //            {
-        //                u.Education = Convert.ToString(dr["Education"]);
-        //            }
-        //            if (dr["Job"].ToString().Length > 0)
-        //            {
-        //                u.Job = Convert.ToString(dr["Job"]);
-        //            }
-        //            if (dr["DateStamp"].ToString().Length > 0)
-        //            {
-        //                string date = Convert.ToString(dr["DateStamp"]);
-        //                u.DateStamp = Convert.ToDateTime(date);
-        //            }
-        //            if (dr["ScoreA"].ToString().Length > 0)
-        //            {
-        //                u.ScoreA = float.Parse(dr["ScoreA"].ToString());
-        //            }
-        //            if (dr["ScoreB"].ToString().Length > 0)
-        //            {
-        //                u.ScoreB = float.Parse(dr["ScoreB"].ToString());
-        //            }
-        //            if (dr["AvgSay1"].ToString().Length > 0)
-        //            {
-        //                u.AvgSay1 = float.Parse(dr["AvgSay1"].ToString());
-        //            }
-        //            if (dr["AvgSay2"].ToString().Length > 0)
-        //            {
-        //                u.AvgSay2 = float.Parse(dr["AvgSay2"].ToString());
-        //            }
-        //            if (dr["AvgSay3"].ToString().Length > 0)
-        //            {
-        //                u.AvgSay3 = float.Parse(dr["AvgSay3"].ToString());
-        //            }
-        //            if (dr["AvgSay4"].ToString().Length > 0)
-        //            {
-        //                u.AvgSay4 = float.Parse(dr["AvgSay4"].ToString());
-        //            }
-        //            if (dr["AvgSay5"].ToString().Length > 0)
-        //            {
-        //                u.AvgSay5 = float.Parse(dr["AvgSay5"].ToString());
-        //            }
-        //            if (dr["Profile"].ToString().Length > 0)
-        //            {
-        //                u.Profile = Convert.ToString(dr["Profile"]);
-        //            }
-        //            u.UserId = Convert.ToInt32(dr["UserId"]);
-        //            u.SecondTime = Convert.ToBoolean(dr["SecondTime"]);
-        //            u.Admin = Convert.ToBoolean(dr["Admin"]);
-        //            ui.Add(u);
-        //        }
-
-        //        return ui;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // write to log
-        //        throw (ex);
-        //    }
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
-        //    }
-        //}
-
+        //---------------------------------------------------------------------------------
+        // update sayings of user
+        //---------------------------------------------------------------------------------
         public int UpdateSayingUser(User u)
         {
 
@@ -312,6 +758,9 @@ namespace WebApplication13.Models.DAL
             }
         }
 
+        //---------------------------------------------------------------------------------
+        // building update user's sayings
+        //---------------------------------------------------------------------------------
         private string BuildUpdateSayingUserCommand(User u)
         {
             String command;
@@ -410,6 +859,9 @@ namespace WebApplication13.Models.DAL
             return command;
         }
 
+        //---------------------------------------------------------------------------------
+        // insert answer
+        //---------------------------------------------------------------------------------
         public int InsertAnswer(List<Answer> a)
         {
             int counter = 0;
