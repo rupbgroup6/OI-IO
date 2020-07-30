@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication13.Models;
 
 namespace WebApplication13.Controllers
 {
     public class ConnectionsController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public IEnumerable<Connections> Get()
         {
-            return new string[] { "value1", "value2" };
+            List<Connections> cL = new List<Connections>();
+            Connections c = new Connections();
+            cL = c.GetAllCons();
+            return cL;
         }
 
         // GET api/<controller>/5

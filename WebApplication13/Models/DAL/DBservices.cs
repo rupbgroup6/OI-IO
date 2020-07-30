@@ -34,6 +34,49 @@ namespace WebApplication13.Models.DAL
         }
 
         //---------------------------------------------------------------------------------
+        // get all friend connections
+        //---------------------------------------------------------------------------------
+        public List<Connections> GetAllCons()
+        {
+            List<Connections> cL = new List<Connections>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = $"SELECT f1.UserId as 'UserA', u.Email as 'EmailA', f1.FriendId as 'UserB', u2.Email as 'EmailB', u.Profile as 'ProfileA', u2.Profile as 'ProfileB' FROM TBFriendsList f1 right join TBUsers u on u.UserId = f1.UserId inner join TBUsers u2 on f1.FriendId = u2.UserId  where u.UserId IN (SELECT  t1.[FriendId] FROM TBFriendsList t1, TBFriendsList t2 where t1.UserId = t2.FriendId and not t1.FriendId = t2.UserId) and f1.status= 'Verified'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Connections c = new Connections();
+                    c.UserA = int.Parse(dr["UserA"].ToString());
+                    c.UserB = int.Parse(dr["UserB"].ToString());
+                    c.EmailA = dr["EmailA"].ToString();
+                    c.EmailB = dr["EmailB"].ToString();
+                    c.ProfileA = dr["ProfileA"].ToString();
+                    c.ProfileB = dr["ProfileB"].ToString();
+
+                    cL.Add(c);
+                }
+
+                return cL;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
         // Delete friend req
         //---------------------------------------------------------------------------------
         public List<Friend> getFeeds(float userId)
