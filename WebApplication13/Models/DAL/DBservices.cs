@@ -36,14 +36,14 @@ namespace WebApplication13.Models.DAL
         //---------------------------------------------------------------------------------
         // Delete friend req
         //---------------------------------------------------------------------------------
-        public List<Friend> getFeeds(int userId)
+        public List<Friend> getFeeds(float userId)
         {
             List<Friend> fl = new List<Friend>();
             SqlConnection con = null;
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = $"select fl.UserId, fl.FriendId, u.Email, fl.Status, fl.FriendGuess from  TBFriendsList fl inner join TBUsers u on fl.UserId=u.UserId where fl.FriendId = 1 and Status = 'Verified'";
+                String selectSTR = $"select fl.UserId, fl.FriendId, u.Email, fl.Status, fl.FriendGuess from  TBFriendsList fl inner join TBUsers u on fl.UserId=u.UserId where fl.FriendId = '{userId}' and Status = 'Verified'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -54,6 +54,10 @@ namespace WebApplication13.Models.DAL
                     f.FriendId = Convert.ToInt32(dr["UserId"]);
                     f.FriendEmail = dr["Email"].ToString();
                     f.Status = dr["Status"].ToString();
+                    if (dr["FriendGuess"].ToString().Length >0)
+                    {
+                        f.FriendsGuess = dr["FriendGuess"].ToString();
+                    }
                     fl.Add(f);
                 }
 
@@ -927,14 +931,14 @@ namespace WebApplication13.Models.DAL
         //--------------------------------------------------------------------------------------------------
         // This method gets the count of all profiles by date
         //--------------------------------------------------------------------------------------------------
-        public List<Profiler> GetAllProfilesByDate(DateTime s, DateTime e)
+        public List<Profiler> GetAllProfilesByDate(string s, string e)
         {
             List<Profiler> ap = new List<Profiler>();
             SqlConnection con = null;
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where DateStamp between '"+s+"' and '"+e+"' and not like 'NULL' group by Profile";
+                String selectSTR = "select Profile, count(Profile) as Total from TBUsers where DateStamp between '"+s+"' and '"+e+"' and DateStamp not like 'NULL' group by Profile";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 

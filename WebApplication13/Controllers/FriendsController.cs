@@ -26,9 +26,9 @@ namespace WebApplication13.Controllers
             return fl;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("api/Friends/GetFeeds/{id}")]
-        public IEnumerable<Friend> Post(int id)
+        public IEnumerable<Friend> Get(float id)
         {
             List<Friend> fl = new List<Friend>();
             Friend f = new Friend();

@@ -33,11 +33,11 @@ namespace WebApplication13.Models
             return temp;
         }
 
-        public List<Friend> getFeeds(int id)
+        public List<Friend> getFeeds(float id)
         {
             List<Friend> temp = new List<Friend>();
             DBservices dbs = new DBservices();
-            temp = dbs.getFeeds(this.UserId);
+            temp = dbs.getFeeds(id);
             return temp;
         }
 

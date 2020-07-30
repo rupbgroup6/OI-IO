@@ -20,12 +20,33 @@ namespace WebApplication13.Controllers
             return pr;
         }
         [HttpGet]
-        [Route("api/profiler/byDate/{sDate, eDate}")]
-        public IEnumerable<Profiler> Get(DateTime sDate, DateTime eDate)
+        [Route("api/profiler/byDate/{date}")]
+        public IEnumerable<Profiler> Get(string date)
         {
+            string date1 = "";
+            string date2 = "";
+            bool sep = true;
+            for (int i = 0; i < date.Length; i++)
+            {
+                if (date[i] != '@')
+                {
+                    if (sep)
+                    {
+                        date1 += date[i];
+                    }
+                    else
+                    {
+                        date2 += date[i];
+                    }
+                }
+                else
+                {
+                    sep = false;
+                }
+            }
             List<Profiler> pr = new List<Profiler>();
             Profiler p = new Profiler();
-            pr = p.GetAllProfilesByDate(sDate, eDate);
+            pr = p.GetAllProfilesByDate(date1, date2);
             return pr;
         }
 

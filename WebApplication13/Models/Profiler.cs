@@ -29,7 +29,7 @@ namespace WebApplication13.Models
             Total = total;
         }
 
-        public List<Profiler> GetAllProfilesByDate(DateTime s, DateTime e)
+        public List<Profiler> GetAllProfilesByDate(string s, string e)
         {
             List<Profiler> temp = new List<Profiler>();
             DBservices dbs = new DBservices();
