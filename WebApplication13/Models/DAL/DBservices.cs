@@ -43,7 +43,7 @@ namespace WebApplication13.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = $"SELECT f1.UserId as 'UserA', u.Email as 'EmailA', f1.FriendId as 'UserB', u2.Email as 'EmailB', u.Profile as 'ProfileA', u2.Profile as 'ProfileB' FROM TBFriendsList f1 right join TBUsers u on u.UserId = f1.UserId inner join TBUsers u2 on f1.FriendId = u2.UserId  where u.UserId IN (SELECT  t1.[FriendId] FROM TBFriendsList t1, TBFriendsList t2 where t1.UserId = t2.FriendId and not t1.FriendId = t2.UserId) and f1.status= 'Verified'";
+                String selectSTR = $"SELECT f1.UserId as 'UserA', u.Email as 'EmailA', f1.FriendId as 'UserB', u2.Email as 'EmailB', u.Profile as 'ProfileA', u2.Profile as 'ProfileB' FROM TBFriendsList f1 right join TBUsers u on u.UserId = f1.UserId inner join TBUsers u2 on f1.FriendId = u2.UserId   where u.UserId > f1.FriendId and f1.status= 'Verified'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
